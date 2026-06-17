@@ -301,19 +301,81 @@
     </div>
   </div>
 
-  <div class="section-label">Site rankings</div>
+  <div class="section-label">Site rankings — NR2600</div>
   <div class="charts-half">
     <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">NR2600 — top 10 avg DL throughput (Mbps)</div></div>
+      <div style="height:280px;position:relative"><canvas id="nr2600tput"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">NR2600 — top 10 max DL PRB utilization (%)</div></div>
+      <div style="height:280px;position:relative"><canvas id="nr2600prb"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-label">Site rankings — NR3500</div>
+  <div class="charts-half">
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">NR3500 — top 10 avg DL throughput (Mbps)</div></div>
+      <div style="height:280px;position:relative"><canvas id="nr3500tput"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">NR3500 — top 10 max DL PRB utilization (%)</div></div>
+      <div style="height:280px;position:relative"><canvas id="nr3500prb"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-label">Site rankings — ESS700</div>
+  <div class="charts-half">
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">ESS700 — top 10 avg DL throughput (Mbps)</div></div>
+      <div style="height:280px;position:relative"><canvas id="ess700tput"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">ESS700 — top 10 max DL PRB utilization (%)</div></div>
+      <div style="height:280px;position:relative"><canvas id="ess700prb"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-label">Hourly trends — per band</div>
+  <div class="charts-full">
+    <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title">Top 10 sites — avg DL throughput</div>
+        <div class="chart-title">DL throughput per band (Mbps)</div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#4a9eff"></span>NR2600</span>
+          <span><span class="legend-dot" style="background:#a78bfa"></span>NR3500</span>
+          <span><span class="legend-dot" style="background:#2dd4bf"></span>ESS700</span>
+        </div>
       </div>
-      <canvas id="top10tput" height="200"></canvas>
+      <canvas id="bandTputChart" height="80"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title">Top 10 sites — avg DL PRB utilization</div>
+        <div class="chart-title">DL PRB utilization per band (%)</div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#4a9eff"></span>NR2600</span>
+          <span><span class="legend-dot" style="background:#a78bfa"></span>NR3500</span>
+          <span><span class="legend-dot" style="background:#2dd4bf"></span>ESS700</span>
+        </div>
       </div>
-      <canvas id="top10prb" height="200"></canvas>
+      <canvas id="bandPrbChart" height="80"></canvas>
+    </div>
+  </div>
+
+  <div class="section-label">Volume by band &amp; type</div>
+  <div class="charts-half">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Total volume by band (GB)</div>
+      </div>
+      <canvas id="volBandChart" height="120"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Total volume by type — FDD vs TDD (GB)</div>
+      </div>
+      <canvas id="volTypeChart" height="120"></canvas>
     </div>
   </div>
 
@@ -330,7 +392,15 @@ window.addEventListener('load', function() {
 const hourlyData = [{"time":"2026-05-25T00:00:00","DL_Tput_Mbps":34.44,"UL_Tput_Mbps":1.93,"DL_PRB_Util":7.97,"UL_PRB_Util":8.06,"Total_Vol_GB":31.25,"Avg_UE":10.40},{"time":"2026-05-25T01:00:00","DL_Tput_Mbps":24.83,"UL_Tput_Mbps":1.46,"DL_PRB_Util":5.73,"UL_PRB_Util":6.10,"Total_Vol_GB":22.58,"Avg_UE":8.51},{"time":"2026-05-25T02:00:00","DL_Tput_Mbps":18.06,"UL_Tput_Mbps":1.08,"DL_PRB_Util":4.26,"UL_PRB_Util":4.63,"Total_Vol_GB":16.43,"Avg_UE":7.36},{"time":"2026-05-25T03:00:00","DL_Tput_Mbps":16.2,"UL_Tput_Mbps":0.95,"DL_PRB_Util":3.8,"UL_PRB_Util":4.1,"Total_Vol_GB":14.8,"Avg_UE":6.9},{"time":"2026-05-25T04:00:00","DL_Tput_Mbps":17.8,"UL_Tput_Mbps":1.02,"DL_PRB_Util":4.1,"UL_PRB_Util":4.4,"Total_Vol_GB":16.1,"Avg_UE":7.2},{"time":"2026-05-25T05:00:00","DL_Tput_Mbps":22.4,"UL_Tput_Mbps":1.31,"DL_PRB_Util":5.2,"UL_PRB_Util":5.5,"Total_Vol_GB":20.3,"Avg_UE":8.1},{"time":"2026-05-25T06:00:00","DL_Tput_Mbps":31.2,"UL_Tput_Mbps":1.75,"DL_PRB_Util":7.2,"UL_PRB_Util":7.6,"Total_Vol_GB":28.4,"Avg_UE":10.2},{"time":"2026-05-25T07:00:00","DL_Tput_Mbps":42.1,"UL_Tput_Mbps":2.38,"DL_PRB_Util":9.7,"UL_PRB_Util":10.2,"Total_Vol_GB":38.3,"Avg_UE":13.5},{"time":"2026-05-25T08:00:00","DL_Tput_Mbps":52.3,"UL_Tput_Mbps":2.95,"DL_PRB_Util":12.1,"UL_PRB_Util":12.7,"Total_Vol_GB":47.6,"Avg_UE":16.8},{"time":"2026-05-25T09:00:00","DL_Tput_Mbps":58.6,"UL_Tput_Mbps":3.32,"DL_PRB_Util":13.5,"UL_PRB_Util":14.2,"Total_Vol_GB":53.3,"Avg_UE":18.8},{"time":"2026-05-25T10:00:00","DL_Tput_Mbps":61.2,"UL_Tput_Mbps":3.48,"DL_PRB_Util":14.1,"UL_PRB_Util":14.9,"Total_Vol_GB":55.7,"Avg_UE":19.6},{"time":"2026-05-25T11:00:00","DL_Tput_Mbps":63.4,"UL_Tput_Mbps":3.62,"DL_PRB_Util":14.6,"UL_PRB_Util":15.4,"Total_Vol_GB":57.7,"Avg_UE":20.3},{"time":"2026-05-25T12:00:00","DL_Tput_Mbps":59.8,"UL_Tput_Mbps":3.41,"DL_PRB_Util":13.8,"UL_PRB_Util":14.5,"Total_Vol_GB":54.4,"Avg_UE":19.1},{"time":"2026-05-25T13:00:00","DL_Tput_Mbps":62.1,"UL_Tput_Mbps":3.54,"DL_PRB_Util":14.3,"UL_PRB_Util":15.1,"Total_Vol_GB":56.5,"Avg_UE":19.9},{"time":"2026-05-25T14:00:00","DL_Tput_Mbps":64.5,"UL_Tput_Mbps":3.68,"DL_PRB_Util":14.8,"UL_PRB_Util":15.6,"Total_Vol_GB":58.7,"Avg_UE":20.7},{"time":"2026-05-25T15:00:00","DL_Tput_Mbps":65.2,"UL_Tput_Mbps":3.72,"DL_PRB_Util":15.0,"UL_PRB_Util":15.8,"Total_Vol_GB":59.3,"Avg_UE":20.9},{"time":"2026-05-25T16:00:00","DL_Tput_Mbps":63.8,"UL_Tput_Mbps":3.63,"DL_PRB_Util":14.7,"UL_PRB_Util":15.5,"Total_Vol_GB":58.1,"Avg_UE":20.4},{"time":"2026-05-25T17:00:00","DL_Tput_Mbps":60.4,"UL_Tput_Mbps":3.44,"DL_PRB_Util":13.9,"UL_PRB_Util":14.7,"Total_Vol_GB":55.0,"Avg_UE":19.3},{"time":"2026-05-25T18:00:00","DL_Tput_Mbps":55.7,"UL_Tput_Mbps":3.18,"DL_PRB_Util":12.8,"UL_PRB_Util":13.5,"Total_Vol_GB":50.7,"Avg_UE":17.8},{"time":"2026-05-25T19:00:00","DL_Tput_Mbps":52.3,"UL_Tput_Mbps":2.98,"DL_PRB_Util":12.0,"UL_PRB_Util":12.7,"Total_Vol_GB":47.6,"Avg_UE":16.7},{"time":"2026-05-25T20:00:00","DL_Tput_Mbps":55.1,"UL_Tput_Mbps":3.14,"DL_PRB_Util":12.7,"UL_PRB_Util":13.4,"Total_Vol_GB":50.2,"Avg_UE":17.6},{"time":"2026-05-25T21:00:00","DL_Tput_Mbps":58.9,"UL_Tput_Mbps":3.36,"DL_PRB_Util":13.6,"UL_PRB_Util":14.3,"Total_Vol_GB":53.6,"Avg_UE":18.9},{"time":"2026-05-25T22:00:00","DL_Tput_Mbps":51.2,"UL_Tput_Mbps":2.91,"DL_PRB_Util":11.8,"UL_PRB_Util":12.4,"Total_Vol_GB":46.6,"Avg_UE":16.4},{"time":"2026-05-25T23:00:00","DL_Tput_Mbps":40.3,"UL_Tput_Mbps":2.28,"DL_PRB_Util":9.3,"UL_PRB_Util":9.8,"Total_Vol_GB":36.7,"Avg_UE":12.9},{"time":"2026-05-26T00:00:00","DL_Tput_Mbps":33.1,"UL_Tput_Mbps":1.87,"DL_PRB_Util":7.6,"UL_PRB_Util":8.0,"Total_Vol_GB":30.1,"Avg_UE":10.6},{"time":"2026-05-26T01:00:00","DL_Tput_Mbps":24.1,"UL_Tput_Mbps":1.36,"DL_PRB_Util":5.6,"UL_PRB_Util":5.9,"Total_Vol_GB":21.9,"Avg_UE":7.7},{"time":"2026-05-26T02:00:00","DL_Tput_Mbps":17.4,"UL_Tput_Mbps":0.99,"DL_PRB_Util":4.0,"UL_PRB_Util":4.3,"Total_Vol_GB":15.8,"Avg_UE":5.6},{"time":"2026-05-26T03:00:00","DL_Tput_Mbps":15.3,"UL_Tput_Mbps":0.87,"DL_PRB_Util":3.5,"UL_PRB_Util":3.8,"Total_Vol_GB":13.9,"Avg_UE":4.9},{"time":"2026-05-26T04:00:00","DL_Tput_Mbps":16.8,"UL_Tput_Mbps":0.95,"DL_PRB_Util":3.9,"UL_PRB_Util":4.1,"Total_Vol_GB":15.3,"Avg_UE":5.4},{"time":"2026-05-26T05:00:00","DL_Tput_Mbps":21.2,"UL_Tput_Mbps":1.20,"DL_PRB_Util":4.9,"UL_PRB_Util":5.2,"Total_Vol_GB":19.3,"Avg_UE":6.8},{"time":"2026-05-26T06:00:00","DL_Tput_Mbps":30.4,"UL_Tput_Mbps":1.72,"DL_PRB_Util":7.0,"UL_PRB_Util":7.4,"Total_Vol_GB":27.7,"Avg_UE":9.7},{"time":"2026-05-26T07:00:00","DL_Tput_Mbps":41.3,"UL_Tput_Mbps":2.35,"DL_PRB_Util":9.5,"UL_PRB_Util":10.1,"Total_Vol_GB":37.6,"Avg_UE":13.2},{"time":"2026-05-26T08:00:00","DL_Tput_Mbps":51.8,"UL_Tput_Mbps":2.94,"DL_PRB_Util":11.9,"UL_PRB_Util":12.6,"Total_Vol_GB":47.1,"Avg_UE":16.6},{"time":"2026-05-26T09:00:00","DL_Tput_Mbps":57.9,"UL_Tput_Mbps":3.29,"DL_PRB_Util":13.3,"UL_PRB_Util":14.1,"Total_Vol_GB":52.7,"Avg_UE":18.5},{"time":"2026-05-26T10:00:00","DL_Tput_Mbps":60.8,"UL_Tput_Mbps":3.45,"DL_PRB_Util":14.0,"UL_PRB_Util":14.8,"Total_Vol_GB":55.3,"Avg_UE":19.4},{"time":"2026-05-26T11:00:00","DL_Tput_Mbps":62.7,"UL_Tput_Mbps":3.57,"DL_PRB_Util":14.4,"UL_PRB_Util":15.2,"Total_Vol_GB":57.1,"Avg_UE":20.0},{"time":"2026-05-26T12:00:00","DL_Tput_Mbps":59.1,"UL_Tput_Mbps":3.37,"DL_PRB_Util":13.6,"UL_PRB_Util":14.4,"Total_Vol_GB":53.8,"Avg_UE":18.9},{"time":"2026-05-26T13:00:00","DL_Tput_Mbps":61.5,"UL_Tput_Mbps":3.50,"DL_PRB_Util":14.2,"UL_PRB_Util":14.9,"Total_Vol_GB":55.9,"Avg_UE":19.7},{"time":"2026-05-26T14:00:00","DL_Tput_Mbps":63.9,"UL_Tput_Mbps":3.64,"DL_PRB_Util":14.7,"UL_PRB_Util":15.5,"Total_Vol_GB":58.2,"Avg_UE":20.5},{"time":"2026-05-26T15:00:00","DL_Tput_Mbps":64.7,"UL_Tput_Mbps":3.68,"DL_PRB_Util":14.9,"UL_PRB_Util":15.7,"Total_Vol_GB":58.9,"Avg_UE":20.7},{"time":"2026-05-26T16:00:00","DL_Tput_Mbps":63.2,"UL_Tput_Mbps":3.60,"DL_PRB_Util":14.6,"UL_PRB_Util":15.3,"Total_Vol_GB":57.5,"Avg_UE":20.2},{"time":"2026-05-26T17:00:00","DL_Tput_Mbps":59.8,"UL_Tput_Mbps":3.41,"DL_PRB_Util":13.8,"UL_PRB_Util":14.5,"Total_Vol_GB":54.4,"Avg_UE":19.1},{"time":"2026-05-26T18:00:00","DL_Tput_Mbps":55.1,"UL_Tput_Mbps":3.14,"DL_PRB_Util":12.7,"UL_PRB_Util":13.3,"Total_Vol_GB":50.1,"Avg_UE":17.6},{"time":"2026-05-26T19:00:00","DL_Tput_Mbps":51.8,"UL_Tput_Mbps":2.95,"DL_PRB_Util":11.9,"UL_PRB_Util":12.6,"Total_Vol_GB":47.1,"Avg_UE":16.5},{"time":"2026-05-26T20:00:00","DL_Tput_Mbps":54.6,"UL_Tput_Mbps":3.11,"DL_PRB_Util":12.6,"UL_PRB_Util":13.2,"Total_Vol_GB":49.7,"Avg_UE":17.5},{"time":"2026-05-26T21:00:00","DL_Tput_Mbps":58.3,"UL_Tput_Mbps":3.32,"DL_PRB_Util":13.4,"UL_PRB_Util":14.2,"Total_Vol_GB":53.1,"Avg_UE":18.6},{"time":"2026-05-26T22:00:00","DL_Tput_Mbps":50.7,"UL_Tput_Mbps":2.88,"DL_PRB_Util":11.7,"UL_PRB_Util":12.3,"Total_Vol_GB":46.2,"Avg_UE":16.2},{"time":"2026-05-26T23:00:00","DL_Tput_Mbps":39.8,"UL_Tput_Mbps":2.26,"DL_PRB_Util":9.2,"UL_PRB_Util":9.7,"Total_Vol_GB":36.3,"Avg_UE":12.7},{"time":"2026-05-27T00:00:00","DL_Tput_Mbps":32.5,"UL_Tput_Mbps":1.84,"DL_PRB_Util":7.5,"UL_PRB_Util":7.9,"Total_Vol_GB":29.6,"Avg_UE":10.4},{"time":"2026-05-27T01:00:00","DL_Tput_Mbps":23.6,"UL_Tput_Mbps":1.34,"DL_PRB_Util":5.5,"UL_PRB_Util":5.8,"Total_Vol_GB":21.5,"Avg_UE":7.5},{"time":"2026-05-27T02:00:00","DL_Tput_Mbps":17.1,"UL_Tput_Mbps":0.97,"DL_PRB_Util":3.9,"UL_PRB_Util":4.2,"Total_Vol_GB":15.6,"Avg_UE":5.5},{"time":"2026-05-27T03:00:00","DL_Tput_Mbps":15.0,"UL_Tput_Mbps":0.85,"DL_PRB_Util":3.5,"UL_PRB_Util":3.7,"Total_Vol_GB":13.6,"Avg_UE":4.8},{"time":"2026-05-27T04:00:00","DL_Tput_Mbps":16.5,"UL_Tput_Mbps":0.94,"DL_PRB_Util":3.8,"UL_PRB_Util":4.0,"Total_Vol_GB":15.0,"Avg_UE":5.3},{"time":"2026-05-27T05:00:00","DL_Tput_Mbps":20.9,"UL_Tput_Mbps":1.19,"DL_PRB_Util":4.8,"UL_PRB_Util":5.1,"Total_Vol_GB":19.0,"Avg_UE":6.7},{"time":"2026-05-27T06:00:00","DL_Tput_Mbps":29.8,"UL_Tput_Mbps":1.69,"DL_PRB_Util":6.9,"UL_PRB_Util":7.3,"Total_Vol_GB":27.2,"Avg_UE":9.5},{"time":"2026-05-27T07:00:00","DL_Tput_Mbps":40.6,"UL_Tput_Mbps":2.31,"DL_PRB_Util":9.4,"UL_PRB_Util":9.9,"Total_Vol_GB":37.0,"Avg_UE":13.0},{"time":"2026-05-27T08:00:00","DL_Tput_Mbps":51.1,"UL_Tput_Mbps":2.91,"DL_PRB_Util":11.8,"UL_PRB_Util":12.4,"Total_Vol_GB":46.6,"Avg_UE":16.3},{"time":"2026-05-27T09:00:00","DL_Tput_Mbps":57.2,"UL_Tput_Mbps":3.26,"DL_PRB_Util":13.2,"UL_PRB_Util":13.9,"Total_Vol_GB":52.1,"Avg_UE":18.3},{"time":"2026-05-27T10:00:00","DL_Tput_Mbps":60.2,"UL_Tput_Mbps":3.43,"DL_PRB_Util":13.9,"UL_PRB_Util":14.6,"Total_Vol_GB":54.8,"Avg_UE":19.2},{"time":"2026-05-27T11:00:00","DL_Tput_Mbps":62.1,"UL_Tput_Mbps":3.54,"DL_PRB_Util":14.3,"UL_PRB_Util":15.1,"Total_Vol_GB":56.5,"Avg_UE":19.9},{"time":"2026-05-27T12:00:00","DL_Tput_Mbps":58.6,"UL_Tput_Mbps":3.34,"DL_PRB_Util":13.5,"UL_PRB_Util":14.2,"Total_Vol_GB":53.3,"Avg_UE":18.7},{"time":"2026-05-27T13:00:00","DL_Tput_Mbps":60.9,"UL_Tput_Mbps":3.47,"DL_PRB_Util":14.0,"UL_PRB_Util":14.8,"Total_Vol_GB":55.5,"Avg_UE":19.5},{"time":"2026-05-27T14:00:00","DL_Tput_Mbps":63.3,"UL_Tput_Mbps":3.61,"DL_PRB_Util":14.6,"UL_PRB_Util":15.3,"Total_Vol_GB":57.6,"Avg_UE":20.3},{"time":"2026-05-27T15:00:00","DL_Tput_Mbps":64.1,"UL_Tput_Mbps":3.65,"DL_PRB_Util":14.8,"UL_PRB_Util":15.6,"Total_Vol_GB":58.4,"Avg_UE":20.5},{"time":"2026-05-27T16:00:00","DL_Tput_Mbps":62.6,"UL_Tput_Mbps":3.57,"DL_PRB_Util":14.4,"UL_PRB_Util":15.2,"Total_Vol_GB":57.0,"Avg_UE":20.0},{"time":"2026-05-27T17:00:00","DL_Tput_Mbps":59.2,"UL_Tput_Mbps":3.38,"DL_PRB_Util":13.7,"UL_PRB_Util":14.4,"Total_Vol_GB":53.9,"Avg_UE":18.9},{"time":"2026-05-27T18:00:00","DL_Tput_Mbps":54.5,"UL_Tput_Mbps":3.11,"DL_PRB_Util":12.6,"UL_PRB_Util":13.2,"Total_Vol_GB":49.6,"Avg_UE":17.4},{"time":"2026-05-27T19:00:00","DL_Tput_Mbps":51.2,"UL_Tput_Mbps":2.92,"DL_PRB_Util":11.8,"UL_PRB_Util":12.4,"Total_Vol_GB":46.6,"Avg_UE":16.4},{"time":"2026-05-27T20:00:00","DL_Tput_Mbps":54.0,"UL_Tput_Mbps":3.08,"DL_PRB_Util":12.5,"UL_PRB_Util":13.1,"Total_Vol_GB":49.2,"Avg_UE":17.3},{"time":"2026-05-27T21:00:00","DL_Tput_Mbps":57.7,"UL_Tput_Mbps":3.29,"DL_PRB_Util":13.3,"UL_PRB_Util":14.0,"Total_Vol_GB":52.5,"Avg_UE":18.4},{"time":"2026-05-27T22:00:00","DL_Tput_Mbps":50.1,"UL_Tput_Mbps":2.85,"DL_PRB_Util":11.6,"UL_PRB_Util":12.2,"Total_Vol_GB":45.6,"Avg_UE":16.0},{"time":"2026-05-27T23:00:00","DL_Tput_Mbps":39.3,"UL_Tput_Mbps":2.23,"DL_PRB_Util":9.1,"UL_PRB_Util":9.6,"Total_Vol_GB":35.8,"Avg_UE":12.5},{"time":"2026-05-28T00:00:00","DL_Tput_Mbps":32.0,"UL_Tput_Mbps":1.81,"DL_PRB_Util":7.4,"UL_PRB_Util":7.8,"Total_Vol_GB":29.1,"Avg_UE":10.2},{"time":"2026-05-28T01:00:00","DL_Tput_Mbps":23.2,"UL_Tput_Mbps":1.31,"DL_PRB_Util":5.4,"UL_PRB_Util":5.7,"Total_Vol_GB":21.1,"Avg_UE":7.4},{"time":"2026-05-28T02:00:00","DL_Tput_Mbps":16.8,"UL_Tput_Mbps":0.95,"DL_PRB_Util":3.9,"UL_PRB_Util":4.1,"Total_Vol_GB":15.3,"Avg_UE":5.4},{"time":"2026-05-28T03:00:00","DL_Tput_Mbps":14.7,"UL_Tput_Mbps":0.83,"DL_PRB_Util":3.4,"UL_PRB_Util":3.6,"Total_Vol_GB":13.4,"Avg_UE":4.7},{"time":"2026-05-28T04:00:00","DL_Tput_Mbps":16.2,"UL_Tput_Mbps":0.92,"DL_PRB_Util":3.7,"UL_PRB_Util":4.0,"Total_Vol_GB":14.8,"Avg_UE":5.2},{"time":"2026-05-28T05:00:00","DL_Tput_Mbps":20.6,"UL_Tput_Mbps":1.17,"DL_PRB_Util":4.7,"UL_PRB_Util":5.0,"Total_Vol_GB":18.7,"Avg_UE":6.6},{"time":"2026-05-28T06:00:00","DL_Tput_Mbps":29.2,"UL_Tput_Mbps":1.66,"DL_PRB_Util":6.7,"UL_PRB_Util":7.1,"Total_Vol_GB":26.6,"Avg_UE":9.3},{"time":"2026-05-28T07:00:00","DL_Tput_Mbps":39.9,"UL_Tput_Mbps":2.27,"DL_PRB_Util":9.2,"UL_PRB_Util":9.7,"Total_Vol_GB":36.4,"Avg_UE":12.7},{"time":"2026-05-28T08:00:00","DL_Tput_Mbps":50.4,"UL_Tput_Mbps":2.87,"DL_PRB_Util":11.6,"UL_PRB_Util":12.3,"Total_Vol_GB":45.9,"Avg_UE":16.1},{"time":"2026-05-28T09:00:00","DL_Tput_Mbps":56.5,"UL_Tput_Mbps":3.22,"DL_PRB_Util":13.0,"UL_PRB_Util":13.8,"Total_Vol_GB":51.4,"Avg_UE":18.0},{"time":"2026-05-28T10:00:00","DL_Tput_Mbps":59.5,"UL_Tput_Mbps":3.39,"DL_PRB_Util":13.7,"UL_PRB_Util":14.5,"Total_Vol_GB":54.2,"Avg_UE":19.0},{"time":"2026-05-28T11:00:00","DL_Tput_Mbps":61.4,"UL_Tput_Mbps":3.50,"DL_PRB_Util":14.2,"UL_PRB_Util":14.9,"Total_Vol_GB":55.9,"Avg_UE":19.6},{"time":"2026-05-28T12:00:00","DL_Tput_Mbps":58.0,"UL_Tput_Mbps":3.31,"DL_PRB_Util":13.4,"UL_PRB_Util":14.1,"Total_Vol_GB":52.8,"Avg_UE":18.5},{"time":"2026-05-28T13:00:00","DL_Tput_Mbps":60.2,"UL_Tput_Mbps":3.43,"DL_PRB_Util":13.9,"UL_PRB_Util":14.6,"Total_Vol_GB":54.8,"Avg_UE":19.2},{"time":"2026-05-28T14:00:00","DL_Tput_Mbps":62.7,"UL_Tput_Mbps":3.57,"DL_PRB_Util":14.5,"UL_PRB_Util":15.2,"Total_Vol_GB":57.1,"Avg_UE":20.1},{"time":"2026-05-28T15:00:00","DL_Tput_Mbps":63.5,"UL_Tput_Mbps":3.62,"DL_PRB_Util":14.6,"UL_PRB_Util":15.4,"Total_Vol_GB":57.8,"Avg_UE":20.3},{"time":"2026-05-28T16:00:00","DL_Tput_Mbps":61.9,"UL_Tput_Mbps":3.53,"DL_PRB_Util":14.3,"UL_PRB_Util":15.0,"Total_Vol_GB":56.4,"Avg_UE":19.8},{"time":"2026-05-28T17:00:00","DL_Tput_Mbps":58.5,"UL_Tput_Mbps":3.34,"DL_PRB_Util":13.5,"UL_PRB_Util":14.2,"Total_Vol_GB":53.3,"Avg_UE":18.7},{"time":"2026-05-28T18:00:00","DL_Tput_Mbps":53.8,"UL_Tput_Mbps":3.07,"DL_PRB_Util":12.4,"UL_PRB_Util":13.1,"Total_Vol_GB":49.0,"Avg_UE":17.2},{"time":"2026-05-28T19:00:00","DL_Tput_Mbps":50.5,"UL_Tput_Mbps":2.88,"DL_PRB_Util":11.7,"UL_PRB_Util":12.3,"Total_Vol_GB":46.0,"Avg_UE":16.1},{"time":"2026-05-28T20:00:00","DL_Tput_Mbps":53.3,"UL_Tput_Mbps":3.04,"DL_PRB_Util":12.3,"UL_PRB_Util":13.0,"Total_Vol_GB":48.6,"Avg_UE":17.0},{"time":"2026-05-28T21:00:00","DL_Tput_Mbps":57.1,"UL_Tput_Mbps":3.26,"DL_PRB_Util":13.2,"UL_PRB_Util":13.9,"Total_Vol_GB":52.0,"Avg_UE":18.2},{"time":"2026-05-28T22:00:00","DL_Tput_Mbps":49.5,"UL_Tput_Mbps":2.82,"DL_PRB_Util":11.4,"UL_PRB_Util":12.0,"Total_Vol_GB":45.1,"Avg_UE":15.8},{"time":"2026-05-28T23:00:00","DL_Tput_Mbps":38.8,"UL_Tput_Mbps":2.20,"DL_PRB_Util":9.0,"UL_PRB_Util":9.4,"Total_Vol_GB":35.4,"Avg_UE":12.3},{"time":"2026-05-29T00:00:00","DL_Tput_Mbps":31.5,"UL_Tput_Mbps":1.78,"DL_PRB_Util":7.3,"UL_PRB_Util":7.7,"Total_Vol_GB":28.7,"Avg_UE":10.0},{"time":"2026-05-29T01:00:00","DL_Tput_Mbps":22.7,"UL_Tput_Mbps":1.29,"DL_PRB_Util":5.3,"UL_PRB_Util":5.6,"Total_Vol_GB":20.7,"Avg_UE":7.2},{"time":"2026-05-29T02:00:00","DL_Tput_Mbps":16.5,"UL_Tput_Mbps":0.94,"DL_PRB_Util":3.8,"UL_PRB_Util":4.1,"Total_Vol_GB":15.0,"Avg_UE":5.3},{"time":"2026-05-29T03:00:00","DL_Tput_Mbps":14.4,"UL_Tput_Mbps":0.82,"DL_PRB_Util":3.3,"UL_PRB_Util":3.5,"Total_Vol_GB":13.1,"Avg_UE":4.6},{"time":"2026-05-29T04:00:00","DL_Tput_Mbps":15.9,"UL_Tput_Mbps":0.91,"DL_PRB_Util":3.7,"UL_PRB_Util":3.9,"Total_Vol_GB":14.5,"Avg_UE":5.1},{"time":"2026-05-29T05:00:00","DL_Tput_Mbps":20.2,"UL_Tput_Mbps":1.15,"DL_PRB_Util":4.7,"UL_PRB_Util":4.9,"Total_Vol_GB":18.4,"Avg_UE":6.5},{"time":"2026-05-29T06:00:00","DL_Tput_Mbps":28.7,"UL_Tput_Mbps":1.63,"DL_PRB_Util":6.6,"UL_PRB_Util":7.0,"Total_Vol_GB":26.1,"Avg_UE":9.2},{"time":"2026-05-29T07:00:00","DL_Tput_Mbps":39.2,"UL_Tput_Mbps":2.23,"DL_PRB_Util":9.1,"UL_PRB_Util":9.5,"Total_Vol_GB":35.7,"Avg_UE":12.5},{"time":"2026-05-29T08:00:00","DL_Tput_Mbps":49.7,"UL_Tput_Mbps":2.83,"DL_PRB_Util":11.5,"UL_PRB_Util":12.1,"Total_Vol_GB":45.2,"Avg_UE":15.9},{"time":"2026-05-29T09:00:00","DL_Tput_Mbps":55.7,"UL_Tput_Mbps":3.18,"DL_PRB_Util":12.9,"UL_PRB_Util":13.6,"Total_Vol_GB":50.7,"Avg_UE":17.8},{"time":"2026-05-29T10:00:00","DL_Tput_Mbps":58.8,"UL_Tput_Mbps":3.35,"DL_PRB_Util":13.6,"UL_PRB_Util":14.3,"Total_Vol_GB":53.6,"Avg_UE":18.8},{"time":"2026-05-29T11:00:00","DL_Tput_Mbps":60.7,"UL_Tput_Mbps":3.46,"DL_PRB_Util":14.0,"UL_PRB_Util":14.8,"Total_Vol_GB":55.2,"Avg_UE":19.4},{"time":"2026-05-29T12:00:00","DL_Tput_Mbps":57.3,"UL_Tput_Mbps":3.27,"DL_PRB_Util":13.2,"UL_PRB_Util":14.0,"Total_Vol_GB":52.2,"Avg_UE":18.3},{"time":"2026-05-29T13:00:00","DL_Tput_Mbps":59.5,"UL_Tput_Mbps":3.39,"DL_PRB_Util":13.7,"UL_PRB_Util":14.5,"Total_Vol_GB":54.2,"Avg_UE":19.0},{"time":"2026-05-29T14:00:00","DL_Tput_Mbps":62.0,"UL_Tput_Mbps":3.53,"DL_PRB_Util":14.3,"UL_PRB_Util":15.1,"Total_Vol_GB":56.5,"Avg_UE":19.8},{"time":"2026-05-29T15:00:00","DL_Tput_Mbps":62.8,"UL_Tput_Mbps":3.58,"DL_PRB_Util":14.5,"UL_PRB_Util":15.3,"Total_Vol_GB":57.2,"Avg_UE":20.1},{"time":"2026-05-29T16:00:00","DL_Tput_Mbps":61.3,"UL_Tput_Mbps":3.49,"DL_PRB_Util":14.1,"UL_PRB_Util":14.9,"Total_Vol_GB":55.8,"Avg_UE":19.6},{"time":"2026-05-29T17:00:00","DL_Tput_Mbps":57.8,"UL_Tput_Mbps":3.30,"DL_PRB_Util":13.3,"UL_PRB_Util":14.1,"Total_Vol_GB":52.7,"Avg_UE":18.5},{"time":"2026-05-29T18:00:00","DL_Tput_Mbps":53.1,"UL_Tput_Mbps":3.03,"DL_PRB_Util":12.3,"UL_PRB_Util":12.9,"Total_Vol_GB":48.4,"Avg_UE":17.0},{"time":"2026-05-29T19:00:00","DL_Tput_Mbps":49.8,"UL_Tput_Mbps":2.84,"DL_PRB_Util":11.5,"UL_PRB_Util":12.1,"Total_Vol_GB":45.4,"Avg_UE":15.9},{"time":"2026-05-29T20:00:00","DL_Tput_Mbps":52.6,"UL_Tput_Mbps":3.00,"DL_PRB_Util":12.1,"UL_PRB_Util":12.8,"Total_Vol_GB":47.9,"Avg_UE":16.8},{"time":"2026-05-29T21:00:00","DL_Tput_Mbps":56.4,"UL_Tput_Mbps":3.22,"DL_PRB_Util":13.0,"UL_PRB_Util":13.8,"Total_Vol_GB":51.4,"Avg_UE":18.0},{"time":"2026-05-29T22:00:00","DL_Tput_Mbps":48.9,"UL_Tput_Mbps":2.79,"DL_PRB_Util":11.3,"UL_PRB_Util":11.9,"Total_Vol_GB":44.5,"Avg_UE":15.6},{"time":"2026-05-29T23:00:00","DL_Tput_Mbps":38.3,"UL_Tput_Mbps":2.17,"DL_PRB_Util":8.8,"UL_PRB_Util":9.3,"Total_Vol_GB":34.9,"Avg_UE":12.2},{"time":"2026-05-30T00:00:00","DL_Tput_Mbps":31.0,"UL_Tput_Mbps":1.76,"DL_PRB_Util":7.2,"UL_PRB_Util":7.5,"Total_Vol_GB":28.2,"Avg_UE":9.9},{"time":"2026-05-30T01:00:00","DL_Tput_Mbps":22.3,"UL_Tput_Mbps":1.26,"DL_PRB_Util":5.2,"UL_PRB_Util":5.4,"Total_Vol_GB":20.3,"Avg_UE":7.1},{"time":"2026-05-30T02:00:00","DL_Tput_Mbps":16.2,"UL_Tput_Mbps":0.92,"DL_PRB_Util":3.7,"UL_PRB_Util":4.0,"Total_Vol_GB":14.8,"Avg_UE":5.2},{"time":"2026-05-30T03:00:00","DL_Tput_Mbps":14.1,"UL_Tput_Mbps":0.80,"DL_PRB_Util":3.3,"UL_PRB_Util":3.4,"Total_Vol_GB":12.9,"Avg_UE":4.5},{"time":"2026-05-30T04:00:00","DL_Tput_Mbps":15.6,"UL_Tput_Mbps":0.89,"DL_PRB_Util":3.6,"UL_PRB_Util":3.8,"Total_Vol_GB":14.2,"Avg_UE":5.0},{"time":"2026-05-30T05:00:00","DL_Tput_Mbps":19.9,"UL_Tput_Mbps":1.13,"DL_PRB_Util":4.6,"UL_PRB_Util":4.8,"Total_Vol_GB":18.1,"Avg_UE":6.4},{"time":"2026-05-30T06:00:00","DL_Tput_Mbps":28.2,"UL_Tput_Mbps":1.60,"DL_PRB_Util":6.5,"UL_PRB_Util":6.9,"Total_Vol_GB":25.7,"Avg_UE":9.0},{"time":"2026-05-30T07:00:00","DL_Tput_Mbps":38.6,"UL_Tput_Mbps":2.19,"DL_PRB_Util":8.9,"UL_PRB_Util":9.4,"Total_Vol_GB":35.2,"Avg_UE":12.3},{"time":"2026-05-30T08:00:00","DL_Tput_Mbps":49.1,"UL_Tput_Mbps":2.79,"DL_PRB_Util":11.3,"UL_PRB_Util":12.0,"Total_Vol_GB":44.7,"Avg_UE":15.7},{"time":"2026-05-30T09:00:00","DL_Tput_Mbps":55.0,"UL_Tput_Mbps":3.14,"DL_PRB_Util":12.7,"UL_PRB_Util":13.4,"Total_Vol_GB":50.1,"Avg_UE":17.6},{"time":"2026-05-30T10:00:00","DL_Tput_Mbps":58.1,"UL_Tput_Mbps":3.31,"DL_PRB_Util":13.4,"UL_PRB_Util":14.1,"Total_Vol_GB":52.9,"Avg_UE":18.6},{"time":"2026-05-30T11:00:00","DL_Tput_Mbps":60.0,"UL_Tput_Mbps":3.42,"DL_PRB_Util":13.9,"UL_PRB_Util":14.6,"Total_Vol_GB":54.7,"Avg_UE":19.2},{"time":"2026-05-30T12:00:00","DL_Tput_Mbps":56.6,"UL_Tput_Mbps":3.23,"DL_PRB_Util":13.1,"UL_PRB_Util":13.8,"Total_Vol_GB":51.6,"Avg_UE":18.1},{"time":"2026-05-30T13:00:00","DL_Tput_Mbps":58.8,"UL_Tput_Mbps":3.36,"DL_PRB_Util":13.6,"UL_PRB_Util":14.3,"Total_Vol_GB":53.6,"Avg_UE":18.8},{"time":"2026-05-30T14:00:00","DL_Tput_Mbps":61.3,"UL_Tput_Mbps":3.50,"DL_PRB_Util":14.1,"UL_PRB_Util":14.9,"Total_Vol_GB":55.8,"Avg_UE":19.6},{"time":"2026-05-30T15:00:00","DL_Tput_Mbps":62.1,"UL_Tput_Mbps":3.54,"DL_PRB_Util":14.3,"UL_PRB_Util":15.1,"Total_Vol_GB":56.6,"Avg_UE":19.9},{"time":"2026-05-30T16:00:00","DL_Tput_Mbps":60.6,"UL_Tput_Mbps":3.46,"DL_PRB_Util":14.0,"UL_PRB_Util":14.7,"Total_Vol_GB":55.2,"Avg_UE":19.4},{"time":"2026-05-30T17:00:00","DL_Tput_Mbps":57.1,"UL_Tput_Mbps":3.26,"DL_PRB_Util":13.2,"UL_PRB_Util":13.9,"Total_Vol_GB":52.0,"Avg_UE":18.3}];
 
 const top10TputData = {labels:['PNQMW5','AMAYA6','NRTHN6','SFRAN6','MKLNG6','MUNLM6','PHILX6','NICOL6','LOBIC6','PRQLE5'],values:[397.7,380.6,291.6,279.2,271.5,270.4,270.0,269.2,268.3,264.6]};
-const top10PrbData = {labels:['CLK566','ABALI6','ANDAU6','SF3DR6','1BECA6','MUNLM6','PILLP6','SFRAN6','RZLVL6','UBGIO6'],values:[55.6,52.3,51.6,49.3,49.1,44.8,43.9,43.3,43.1,42.5]};
+const top10PrbData = {labels:['UBGIO6','SF3DR6','PNQMW5','MUNLM6','AJVAC6','ANDAU6','1LING6','CLK566','DMERC6','1BECA6'],values:[82.1,78.2,73.9,73.9,72.6,72.0,72.0,71.9,71.1,70.9]};
+
+const ess700Tput = [2.206,1.804,1.418,1.206,1.18,1.459,1.782,2.057,2.335,2.543,2.75,2.688,2.72,2.777,2.797,2.733,2.789,2.85,2.92,2.913,2.902,2.823,2.579,2.379,2.024,1.676,1.318,1.113,1.139,1.434,1.769,2.02,2.22,2.349,2.539,2.525,2.6,2.566,2.629,2.701,2.781,2.883,2.951,2.952,2.948,2.836,2.692,2.367,2.155,1.75,1.36,1.142,1.136,1.335,1.627,1.967,2.215,2.512,2.66,2.626,2.626,2.666,2.69,2.729,2.868,2.967,3.125,3.042,3.015,2.894,2.654,2.357,2.062,1.689,1.341,1.14,1.184,1.46,1.731,2.012,2.194,2.382,2.481,2.532,2.552,2.52,2.598,2.674,2.799,2.857,2.868,2.91,2.944,2.746,2.552,2.275,2.003,1.611,1.321,1.107,1.113,1.33,1.662,1.99,2.221,2.381,2.561,2.501,2.561,2.556,2.55,2.714,2.773,2.938,2.947,2.981,2.956,2.847,2.596,2.311,2.012,1.727,1.389,1.188,1.113,1.306,1.561,1.932,2.212,2.422,2.544,2.626,2.675,2.71,2.748,2.814,2.882,2.94];
+const nr2600Tput = [66.888,47.905,34.774,27.337,26.894,35.378,55.044,70.507,83.502,95.226,103.23,102.195,105.802,102.236,100.983,98.802,98.352,101.136,107.103,110.5,113.844,112.28,98.927,81.336,60.174,43.434,32.188,26.951,27.133,35.535,54.457,68.916,79.274,89.105,96.751,97.899,102.191,98.558,97.524,98.926,97.446,100.807,107.662,111.938,115.146,113.899,102.076,85.002,63.31,46.309,34.729,27.637,26.748,33.591,51.013,64.475,78.239,91.915,99.299,98.749,101.64,99.947,98.876,102.062,101.566,105.425,113.004,113.726,118.786,118.877,106.339,87.069,63.361,46.144,34.157,27.059,27.239,35.995,54.863,69.323,80.673,89.507,96.246,99.866,102.909,99.479,98.697,100.825,101.714,103.42,108.623,114.65,119.229,116.546,103.48,84.628,61.405,45.525,34.393,27.41,27.651,36.558,55.188,69.33,82.9,95.364,103.585,103.055,107.063,102.022,102.549,106.107,107.878,111.971,114.313,117.852,121.666,119.381,106.389,89.327,67.179,49.517,37.068,29.553,27.947,34.27,51.521,65.75,78.807,89.811,97.812,101.797,105.132,103.474,104.0,103.915,104.235,102.61];
+const nr3500Tput = [68.95,52.113,36.837,30.36,29.992,37.014,52.826,66.931,80.496,90.908,99.092,103.859,108.553,105.862,105.322,104.869,102.914,104.082,108.657,108.233,107.96,104.862,97.401,81.274,65.573,48.393,35.908,31.252,28.955,36.657,52.365,63.861,73.34,85.157,92.024,95.277,102.099,97.287,98.437,99.929,99.651,105.992,110.912,109.456,110.737,111.046,97.456,81.789,67.559,52.487,37.575,29.86,27.726,34.71,48.869,61.652,72.845,84.338,94.548,96.463,99.991,99.571,102.704,101.973,106.528,110.099,113.729,114.301,117.438,115.167,102.076,86.994,64.655,51.079,39.522,30.27,29.378,36.497,55.811,65.693,75.951,82.372,87.742,93.4,101.883,98.758,97.463,101.985,100.406,104.513,106.397,112.613,114.481,110.486,99.313,84.089,67.026,51.836,38.097,32.016,28.079,36.807,56.304,69.108,77.896,87.791,94.691,99.317,103.856,99.741,102.98,108.265,110.172,112.871,110.878,115.741,119.335,114.656,105.322,86.708,64.59,50.29,39.677,31.276,28.041,33.534,48.9,62.226,72.581,80.837,85.763,92.448,101.745,103.295,101.868,99.84,101.476,126.108];
+
+const ess700Prb = [6.369,4.705,3.67,3.141,3.15,4.014,5.216,6.418,7.672,8.747,9.611,9.646,10.308,9.993,9.84,9.546,9.499,9.75,10.207,10.891,11.574,11.452,9.827,7.742,5.85,4.491,3.48,2.993,3.166,4.065,5.31,6.455,7.432,8.312,9.232,9.441,10.119,9.496,9.596,9.627,9.606,9.834,10.414,11.1,11.883,11.763,10.229,7.992,6.253,4.659,3.598,3.112,3.148,3.829,5.037,6.324,7.542,8.942,9.774,9.996,10.431,10.11,9.996,10.068,10.123,10.358,11.007,11.45,12.043,11.746,10.15,7.922,6.012,4.528,3.518,3.048,3.183,4.079,5.311,6.426,7.405,8.409,9.09,9.469,10.071,9.537,9.522,9.619,9.724,9.774,10.344,11.171,11.877,11.395,9.782,7.536,5.798,4.368,3.449,2.992,3.118,3.914,5.211,6.343,7.441,8.555,9.431,9.41,10.344,9.825,9.71,9.9,9.925,10.432,10.699,11.532,12.133,11.938,10.28,8.167,6.301,4.901,3.802,3.253,3.178,3.889,5.059,6.42,7.628,8.684,9.433,9.961,10.488,10.219,10.14,10.131,10.112,10.763];
+const nr2600Prb = [9.66,6.818,4.885,3.837,3.825,5.189,7.347,9.519,11.4,13.378,14.985,15.109,16.209,15.556,15.807,15.464,15.468,15.688,16.382,16.638,16.953,16.684,14.907,11.738,8.965,6.255,4.615,3.854,3.865,5.183,7.261,9.434,10.996,12.649,14.011,14.253,15.131,14.611,14.642,15.093,15.468,15.67,16.433,17.037,17.371,17.497,15.294,11.954,9.352,6.731,5.104,4.055,3.888,4.905,6.605,8.486,10.506,12.779,14.317,14.56,14.857,14.694,14.736,15.459,15.73,16.313,17.385,17.16,17.755,17.472,15.085,11.846,9.176,6.554,4.786,3.829,3.903,5.249,7.287,9.427,11.061,12.583,13.818,14.41,15.23,14.682,14.685,15.352,15.756,15.929,16.562,17.495,18.327,17.592,14.977,11.583,9.004,6.649,4.92,3.877,3.912,5.333,7.296,9.36,11.357,13.437,14.956,14.963,15.721,15.049,15.631,16.245,16.507,17.18,17.589,18.12,18.395,17.882,15.499,12.363,9.779,7.161,5.213,4.144,3.927,4.95,6.643,8.761,10.725,12.538,13.988,14.823,15.59,15.339,15.446,15.756,15.926,15.966];
+const nr3500Prb = [9.154,6.646,4.814,4.074,4.052,5.049,7.005,8.872,10.831,12.243,13.322,14.117,14.593,14.073,14.445,14.286,14.0,14.725,15.338,15.07,14.871,14.159,13.037,10.628,8.615,6.392,4.713,4.171,3.969,5.114,6.988,8.718,9.859,11.395,12.371,12.993,13.94,13.312,13.275,13.668,14.118,14.988,15.626,15.488,15.209,15.763,13.113,10.566,9.018,6.948,5.146,4.021,3.816,4.736,6.265,7.866,9.396,11.205,12.736,13.041,13.223,13.09,13.253,13.689,14.323,15.425,15.932,15.724,16.235,15.9,13.54,11.243,8.358,6.434,5.046,4.043,4.051,4.909,7.332,8.742,10.053,10.828,11.936,12.839,13.781,13.241,13.258,14.364,14.25,14.736,15.118,15.502,15.607,14.771,12.981,10.529,8.714,6.707,5.01,4.29,3.921,5.077,7.186,9.114,10.399,11.915,12.777,13.469,13.956,13.106,13.786,15.023,15.389,15.973,15.77,16.16,16.333,15.337,13.901,11.27,8.505,6.499,5.09,4.177,3.792,4.485,6.111,7.919,9.167,10.488,11.12,12.341,13.415,13.513,13.632,13.344,14.096,17.254];
 
 const labels = hourlyData.map(d => {
   const dt = new Date(d.time);
@@ -377,11 +447,20 @@ new Chart(document.getElementById('tputChart'), {
   data: {
     labels,
     datasets: [
-      { label: 'DL Mbps', data: hourlyData.map(d => +d.DL_Tput_Mbps.toFixed(1)), borderColor: '#4a9eff', backgroundColor: 'rgba(74,158,255,0.08)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
-      { label: 'UL Mbps', data: hourlyData.map(d => +d.UL_Tput_Mbps.toFixed(2)), borderColor: '#3ecf8e', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 }
+      { label: 'DL Mbps', data: hourlyData.map(d => +d.DL_Tput_Mbps.toFixed(1)), borderColor: '#4a9eff', backgroundColor: 'rgba(74,158,255,0.08)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.4, yAxisID: 'y' },
+      { label: 'UL Mbps', data: hourlyData.map(d => +d.UL_Tput_Mbps.toFixed(2)), borderColor: '#3ecf8e', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4, yAxisID: 'y2' }
     ]
   },
-  options: lineOpts('Mbps')
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10 } },
+    scales: {
+      x: { ticks: { color: textColor, font: { size: 10 }, maxRotation: 0, autoSkip: false }, grid: { color: gridColor }, border: { display: false } },
+      y: { position: 'left', ticks: { color: '#4a9eff', font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: 'DL Mbps', color: '#4a9eff', font: { size: 10 } } },
+      y2: { position: 'right', ticks: { color: '#3ecf8e', font: { size: 10 } }, grid: { display: false }, border: { display: false }, title: { display: true, text: 'UL Mbps', color: '#3ecf8e', font: { size: 10 } } }
+    }
+  }
 });
 
 new Chart(document.getElementById('prbChart'), {
@@ -389,11 +468,20 @@ new Chart(document.getElementById('prbChart'), {
   data: {
     labels,
     datasets: [
-      { label: 'DL PRB %', data: hourlyData.map(d => +d.DL_PRB_Util.toFixed(1)), borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
-      { label: 'UL PRB %', data: hourlyData.map(d => +d.UL_PRB_Util.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 }
+      { label: 'DL PRB %', data: hourlyData.map(d => +d.DL_PRB_Util.toFixed(1)), borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.4, yAxisID: 'y' },
+      { label: 'UL PRB %', data: hourlyData.map(d => +d.UL_PRB_Util.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4, yAxisID: 'y2' }
     ]
   },
-  options: lineOpts('%')
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10 } },
+    scales: {
+      x: { ticks: { color: textColor, font: { size: 10 }, maxRotation: 0, autoSkip: false }, grid: { color: gridColor }, border: { display: false } },
+      y: { position: 'left', ticks: { color: '#a78bfa', font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: 'DL PRB %', color: '#a78bfa', font: { size: 10 } } },
+      y2: { position: 'right', ticks: { color: '#f59e0b', font: { size: 10 } }, grid: { display: false }, border: { display: false }, title: { display: true, text: 'UL PRB %', color: '#f59e0b', font: { size: 10 } } }
+    }
+  }
 });
 
 new Chart(document.getElementById('volChart'), {
@@ -414,47 +502,141 @@ new Chart(document.getElementById('volChart'), {
     plugins: {
       legend: { display: false },
       tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10 }
+    },
+    scales: {
+      x: { ticks: { color: textColor, font: { size: 10 }, maxRotation: 90, minRotation: 90, autoSkip: false }, grid: { color: gridColor }, border: { display: false } },
+      y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: 'GB', color: textColor, font: { size: 10 } } }
     }
   }
 });
 
-const barOpts = (label, color) => ({
+const bandSiteData = {
+  nr2600tput: {labels:['AMAYA6','NRTHN6','SFRAN6','MKLNG6','MUNLM6','PHILX6','NICOL6','LOBIC6','LMAY16','MARTP6'], values:[380.6,291.6,279.2,271.5,270.4,270.0,269.2,268.3,262.1,262.1]},
+  nr2600prb:  {labels:['CMPOD6','MPLTL6','SFRAN6','LUGAM6','1LING6','SF3DR6','PQGDS6','1BAQH6','UBGIO6','1BCL26'], values:[87.0,86.6,85.9,85.2,83.6,83.0,82.3,82.2,82.1,82.1]},
+  nr3500tput: {labels:['PNQMW5','PRQLE5','BCSPV5','PNQCL5','AUFPN5','1AN185','BRENT5','1AN035','1NOG15','MAMBG5'], values:[397.7,264.6,238.0,221.7,215.3,210.8,210.3,185.5,182.1,160.1]},
+  nr3500prb:  {labels:['1MBOG5','BRENT5','PRQLE5','PNQMW5','1AN105','MAMBG5','PNQCL5','FHILL5','1AN185','ADMIA5'], values:[82.2,78.1,74.7,73.9,68.3,67.5,61.4,60.1,59.8,58.3]},
+  ess700tput: {labels:['SMCALS','GNTRIS','1MLLSS','SALWGS','BAYANS','CLRMCS','PNQIDS','CANDBS','SLBIIS','CLTBNS'], values:[22.3,20.0,19.1,18.7,18.0,16.9,15.8,15.8,15.7,15.3]},
+  ess700prb:  {labels:['SNJNES','SMCALS','GNTRIS','ALABGS','DASPLS','1CALLS','BNLDNS','EURTLS','MXSABS','STOMBS'], values:[83.3,77.5,77.0,76.3,76.0,73.4,73.1,71.8,71.4,71.2]}
+};
+
+const bandColors = { nr2600: 'rgba(74,158,255,0.75)', nr3500: 'rgba(167,139,250,0.75)', ess700: 'rgba(45,212,191,0.75)' };
+
+function makeBandBar(id, data, unit, color) {
+  new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [{ data: data.values, backgroundColor: color, borderRadius: 3, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10,
+          callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)} ${unit}` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false } },
+        y: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false }, border: { display: false } }
+      }
+    }
+  });
+}
+
+makeBandBar('nr2600tput', bandSiteData.nr2600tput, 'Mbps', bandColors.nr2600);
+makeBandBar('nr2600prb',  bandSiteData.nr2600prb,  '%',    bandColors.nr2600);
+makeBandBar('nr3500tput', bandSiteData.nr3500tput, 'Mbps', bandColors.nr3500);
+makeBandBar('nr3500prb',  bandSiteData.nr3500prb,  '%',    bandColors.nr3500);
+makeBandBar('ess700tput', bandSiteData.ess700tput, 'Mbps', bandColors.ess700);
+makeBandBar('ess700prb',  bandSiteData.ess700prb,  '%',    bandColors.ess700);
+
+const volBandData = { labels: ['NR2600', 'NR3500', 'ESS700'], values: [4859.4, 198.4, 161.0] };
+const volTypeData = { labels: ['TDD', 'FDD'], values: [5057.8, 161.0] };
+
+const simpleBarOpts = (unit) => ({
   indexAxis: 'y',
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   plugins: {
     legend: { display: false },
     tooltip: {
-      backgroundColor: '#1a1e28',
-      borderColor: 'rgba(255,255,255,0.1)',
-      borderWidth: 1,
-      titleColor: '#e8eaf0',
-      bodyColor: '#8b90a0',
-      callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)} ${label}` }
+      backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+      titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10,
+      callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)} ${unit}` }
     }
   },
   scales: {
-    x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false } },
-    y: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false }, border: { display: false } }
+    x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: unit, color: textColor, font: { size: 10 } } },
+    y: { ticks: { color: textColor, font: { size: 11 } }, grid: { display: false }, border: { display: false } }
   }
 });
 
-new Chart(document.getElementById('top10tput'), {
+new Chart(document.getElementById('volBandChart'), {
   type: 'bar',
   data: {
-    labels: top10TputData.labels,
-    datasets: [{ data: top10TputData.values, backgroundColor: 'rgba(74,158,255,0.7)', borderRadius: 3, borderSkipped: false }]
+    labels: volBandData.labels,
+    datasets: [{
+      data: volBandData.values,
+      backgroundColor: ['rgba(74,158,255,0.75)', 'rgba(167,139,250,0.75)', 'rgba(45,212,191,0.75)'],
+      borderRadius: 4,
+      borderSkipped: false
+    }]
   },
-  options: barOpts('Mbps', '#4a9eff')
+  options: simpleBarOpts('GB')
 });
 
-new Chart(document.getElementById('top10prb'), {
+new Chart(document.getElementById('volTypeChart'), {
   type: 'bar',
   data: {
-    labels: top10PrbData.labels,
-    datasets: [{ data: top10PrbData.values, backgroundColor: 'rgba(167,139,250,0.7)', borderRadius: 3, borderSkipped: false }]
+    labels: volTypeData.labels,
+    datasets: [{
+      data: volTypeData.values,
+      backgroundColor: ['rgba(245,158,11,0.75)', 'rgba(248,113,113,0.75)'],
+      borderRadius: 4,
+      borderSkipped: false
+    }]
   },
-  options: barOpts('%', '#a78bfa')
+  options: simpleBarOpts('GB')
+});
+
+const bandLineOpts = (yLabel) => ({
+  responsive: true, maintainAspectRatio: true,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: { display: false },
+    tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10 }
+  },
+  scales: {
+    x: { ticks: { color: textColor, font: { size: 10 }, maxRotation: 90, minRotation: 90, autoSkip: false }, grid: { color: gridColor }, border: { display: false } },
+    y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: yLabel, color: textColor, font: { size: 10 } } }
+  }
+});
+
+new Chart(document.getElementById('bandTputChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'NR2600', data: nr2600Tput, borderColor: '#4a9eff', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+      { label: 'NR3500', data: nr3500Tput, borderColor: '#a78bfa', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+      { label: 'ESS700', data: ess700Tput, borderColor: '#2dd4bf', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 }
+    ]
+  },
+  options: bandLineOpts('Mbps')
+});
+
+new Chart(document.getElementById('bandPrbChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'NR2600', data: nr2600Prb, borderColor: '#4a9eff', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+      { label: 'NR3500', data: nr3500Prb, borderColor: '#a78bfa', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 },
+      { label: 'ESS700', data: ess700Prb, borderColor: '#2dd4bf', backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0, tension: 0.4 }
+    ]
+  },
+  options: bandLineOpts('%')
 });
 
 }); // end window.load
