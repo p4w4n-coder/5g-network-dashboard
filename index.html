@@ -379,6 +379,43 @@
     </div>
   </div>
 
+  <div class="section-label">Cell scatter — throughput vs volume (color = DL PRB util)</div>
+  <div class="charts-full">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">NR2600 — cells: DL throughput vs volume</div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#3ecf8e"></span>&lt;40% PRB</span>
+          <span><span class="legend-dot" style="background:#f59e0b"></span>40–70% PRB</span>
+          <span><span class="legend-dot" style="background:#f87171"></span>&gt;70% PRB</span>
+        </div>
+      </div>
+      <canvas id="scatter2600" height="120"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">NR3500 — cells: DL throughput vs volume</div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#3ecf8e"></span>&lt;40% PRB</span>
+          <span><span class="legend-dot" style="background:#f59e0b"></span>40–70% PRB</span>
+          <span><span class="legend-dot" style="background:#f87171"></span>&gt;70% PRB</span>
+        </div>
+      </div>
+      <canvas id="scatter3500" height="120"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">ESS700 — cells: DL throughput vs volume</div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#3ecf8e"></span>&lt;40% PRB</span>
+          <span><span class="legend-dot" style="background:#f59e0b"></span>40–70% PRB</span>
+          <span><span class="legend-dot" style="background:#f87171"></span>&gt;70% PRB</span>
+        </div>
+      </div>
+      <canvas id="scatter700" height="120"></canvas>
+    </div>
+  </div>
+
 </main>
 
 <div class="divider"></div>
@@ -639,6 +676,65 @@ new Chart(document.getElementById('bandPrbChart'), {
   options: bandLineOpts('%')
 });
 
+// Scatter charts - cell level throughput vs volume colored by PRB
+function prbColor(prb) {
+  if (prb >= 70) return 'rgba(248,113,113,0.7)';
+  if (prb >= 40) return 'rgba(245,158,11,0.7)';
+  return 'rgba(62,207,142,0.7)';
+}
+
+function makeScatter(id, points) {
+  const green  = points.filter(p => p.prb < 40).map(p => ({x: p.x, y: p.y, cell: p.cell, prb: p.prb}));
+  const amber  = points.filter(p => p.prb >= 40 && p.prb < 70).map(p => ({x: p.x, y: p.y, cell: p.cell, prb: p.prb}));
+  const red    = points.filter(p => p.prb >= 70).map(p => ({x: p.x, y: p.y, cell: p.cell, prb: p.prb}));
+
+  new Chart(document.getElementById(id), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: '<40% PRB', data: green, backgroundColor: 'rgba(62,207,142,0.5)', pointRadius: 3, pointHoverRadius: 5 },
+        { label: '40-70% PRB', data: amber, backgroundColor: 'rgba(245,158,11,0.5)', pointRadius: 3, pointHoverRadius: 5 },
+        { label: '>70% PRB', data: red, backgroundColor: 'rgba(248,113,113,0.5)', pointRadius: 3, pointHoverRadius: 5 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+          titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10,
+          callbacks: {
+            title: ctx => ctx[0].raw.cell || '',
+            label: ctx => [`DL Tput: ${ctx.parsed.x.toFixed(1)} Mbps`, `Volume: ${ctx.parsed.y.toFixed(3)} GB`, `DL PRB: ${ctx.raw.prb}%`]
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: 'Avg DL Throughput (Mbps)', color: textColor, font: { size: 10 } } },
+        y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, border: { display: false }, title: { display: true, text: 'Total Volume (GB)', color: textColor, font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// Load scatter data from embedded JSON
+fetch('scatter_data.json')
+  .then(r => r.json())
+  .then(data => {
+    makeScatter('scatter2600', data.NR2600);
+    makeScatter('scatter3500', data.NR3500);
+    makeScatter('scatter700',  data.ESS700);
+  })
+  .catch(() => {
+    // Fallback if fetch fails - show message in canvas
+    ['scatter2600','scatter3500','scatter700'].forEach(id => {
+      const ctx = document.getElementById(id).getContext('2d');
+      ctx.fillStyle = '#8b90a0';
+      ctx.font = '12px Inter';
+      ctx.fillText('Upload scatter_data.json to GitHub alongside index.html', 20, 80);
+    });
+  });
 }); // end window.load
 </script>
 </body>
