@@ -305,11 +305,11 @@
   <div class="charts-half">
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">NR2600 — top 10 avg DL throughput (Mbps)</div></div>
-      <div style="height:280px;position:relative"><canvas id="nr2600tput"></canvas></div>
+      <canvas id="nr2600tput"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">NR2600 — top 10 max DL PRB utilization (%)</div></div>
-      <div style="height:280px;position:relative"><canvas id="nr2600prb"></canvas></div>
+      <canvas id="nr2600prb"></canvas>
     </div>
   </div>
 
@@ -317,11 +317,11 @@
   <div class="charts-half">
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">NR3500 — top 10 avg DL throughput (Mbps)</div></div>
-      <div style="height:280px;position:relative"><canvas id="nr3500tput"></canvas></div>
+      <canvas id="nr3500tput"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">NR3500 — top 10 max DL PRB utilization (%)</div></div>
-      <div style="height:280px;position:relative"><canvas id="nr3500prb"></canvas></div>
+      <canvas id="nr3500prb"></canvas>
     </div>
   </div>
 
@@ -329,11 +329,11 @@
   <div class="charts-half">
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">ESS700 — top 10 avg DL throughput (Mbps)</div></div>
-      <div style="height:280px;position:relative"><canvas id="ess700tput"></canvas></div>
+      <canvas id="ess700tput"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">ESS700 — top 10 max DL PRB utilization (%)</div></div>
-      <div style="height:280px;position:relative"><canvas id="ess700prb"></canvas></div>
+      <canvas id="ess700prb"></canvas>
     </div>
   </div>
 
@@ -529,7 +529,7 @@ function makeBandBar(id, data, unit, color) {
       datasets: [{ data: data.values, backgroundColor: color, borderRadius: 3, borderSkipped: false }]
     },
     options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y', responsive: true, maintainAspectRatio: true, aspectRatio: 1.4,
       plugins: {
         legend: { display: false },
         tooltip: { backgroundColor: '#1a1e28', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a0', padding: 10,
